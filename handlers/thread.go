@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/unpWn4bl3/myChitchat/models"
 )
 
@@ -47,7 +48,11 @@ func ReadThread(w http.ResponseWriter, r *http.Request) {
 	uuid := params.Get("uuid")
 	thread, err := models.ThreadByUUID(uuid)
 	if err != nil {
-		warning("Cannot read thread: " + err.Error())
+		// warning("Cannot read thread: " + err.Error())
+		msg := localizer.MustLocalize(&i18n.LocalizeConfig{
+			MessageID: "thread_not_found",
+		})
+		warning(msg + err.Error())
 		return
 	}
 	_, err = session(w, r)
